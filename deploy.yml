@@ -1,0 +1,7 @@
+---
+- name: Déploiement Java Application
+  hosts: localhost
+  tasks:
+    - name: Afficher le message de déploiement
+      debug:
+        msg: "L'application Java est déployée avec succès !"
