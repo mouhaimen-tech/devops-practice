@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('spring-boot-server') {
+                 dir('springBoot-angular/spring-boot-server') {
                     sh 'mvn clean package'
                 }
             }
