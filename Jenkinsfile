@@ -11,7 +11,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                  dir('spring-boot-server') {
-                    sh 'chmod +x ./mvnw && ./mvnw clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
