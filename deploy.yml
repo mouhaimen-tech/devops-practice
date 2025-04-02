@@ -1,7 +1,29 @@
 ---
-- name: Déploiement Java Application
-  hosts: localhost
+- name: Deploy Spring Boot and Angular Application
+  hosts: all
+  become: yes
   tasks:
-    - name: Afficher le message de déploiement
-      debug:
-        msg: "L'application Java est déployée avec succès !"
+    - name: Install necessary packages
+      apt:
+        name:
+          - openjdk-21-jdk
+          - nginx
+        state: present
+
+    - name: Copy backend JAR file
+      copy:
+        src: spring-boot-server/target/*.jar
+        dest: /opt/spring-app/app.jar
+
+    - name: Run Spring Boot application
+      shell: "nohup java -jar /opt/spring-app/app.jar &"
+
+    - name: Copy frontend files
+      copy:
+        src: angular-17-client/dist/*
+        dest: /var/www/html/
+
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted
