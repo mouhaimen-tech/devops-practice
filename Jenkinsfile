@@ -10,8 +10,8 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                 dir('/home/codespace/.jenkins/workspace/Java21-Pipeline/devops-practice/spring-boot-server') {
-                    sh 'mvn clean package'
+                 dir('spring-boot-server') {
+                    sh './mvnw clean package'
                 }
             }
         }
