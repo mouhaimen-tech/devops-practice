@@ -1,30 +1,43 @@
 pipeline {
     agent any
-    environment {
-        JAVA_HOME = "/usr/lib/jvm/java-11-openjdk-amd64"
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
-    }
+
     stages {
-        stage('Setup') {
+        stage('Checkout') {
             steps {
-                sh 'java -version'
-                sh 'echo "Environment ready!"'
+                git url: 'https://github.com/mouhaimen-tech/devops-practice.git', branch: 'main'
             }
         }
-        stage('Compile') {
+
+        stage('Build Backend') {
             steps {
-                sh 'javac src/HelloWorld.java'
+                dir('spring-boot-server') {
+                    sh './mvnw clean package'
+                }
             }
         }
-        stage('Run') {
+
+        stage('Build Frontend') {
             steps {
-                sh 'java -cp src HelloWorld'
+                dir('angular-17-client') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
+
         stage('Deploy') {
             steps {
-                sh 'ansible-playbook -i hosts deploy.yml'
+                sh 'ansible-playbook -i inventory.yml deploy.yml'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
